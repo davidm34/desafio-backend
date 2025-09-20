@@ -1,0 +1,14 @@
+from sqlalchemy import Column, Integer, String, DateTime, func
+from database import Base
+
+class Empresa(Base):
+    __tablename__ = "empresas"
+
+    id = Column(Integer, primary_key=True, index=True)
+    nome = Column(String, nullable=False)
+    cnpj = Column(String, unique=True, nullable=False)
+    cidade = Column(String, nullable=False)
+    ramo_atuacao = Column(String, nullable=False)
+    telefone = Column(String, nullable=True)
+    email_contato = Column(String, unique=True, nullable=False)
+    data_cadastro = Column(DateTime(timezone=True), server_default=func.now())
