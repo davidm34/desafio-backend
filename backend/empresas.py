@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-import backend.schemas as schemas, backend.crud as crud, backend.database as database
+import schemas as schemas, crud as crud, database as database
 
 router = APIRouter(prefix="/empresas", tags=["empresas"])
 

@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-import backend.models as models, backend.schemas as schemas
+import models as models, schemas as schemas
 from fastapi import HTTPException, status
 
 def get_empresas(db: Session, cidade: str | None = None, ramo: str | None = None, search: str | None = None):
@@ -43,7 +43,7 @@ def delete_empresa(db: Session, empresa_id: int):
     db.commit()
     return {"detail": "Empresa excluída com sucesso"}
 
-def create_admin(admin: models.AdminCreate, db: Session):
+def create_admin(db: Session, admin: schemas.AdminCreate):
     existing = db.query(models.Admin).filter(models.Admin.nome == admin.nome).first()
     if existing:
         raise HTTPException(status_code=400, detail="Administrador já existe")

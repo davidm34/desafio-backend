@@ -24,7 +24,7 @@ class EmpresaOut(EmpresaBase):
     data_cadastro: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class AdminBase(BaseModel):
@@ -37,4 +37,4 @@ class AdminCreate(AdminBase):
 class AdminOut(AdminBase):
     id: int 
     class Config:
-        orm_mode = True
+        from_attributes = True
