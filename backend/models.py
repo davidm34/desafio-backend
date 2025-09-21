@@ -16,5 +16,6 @@ class Empresa(Base):
 class Admin(Base):
     __tablename__ = "admin"
 
+    id = Column(Integer, primary_key=True, index=True) 
     nome = Column(String, nullable=False)
     senha = Column(String, nullable=False)

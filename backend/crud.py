@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import and_
 import models as models, schemas as schemas
 from fastapi import HTTPException, status
 
@@ -44,11 +45,11 @@ def delete_empresa(db: Session, empresa_id: int):
     return {"detail": "Empresa excluída com sucesso"}
 
 def create_or_login_admin(db: Session, admin: schemas.AdminCreate):
-    existing = db.query(models.Admin)
+    existing = db.query(models.Admin).all()    
     if existing:
-        # logar
-        if existing.models.Admin.nome == admin.nome and existing.models.Admin.senha == admin.senha:
-            return existing
+        verify_admin = db.query(models.Admin).filter(and_(models.Admin.nome == admin.nome, models.Admin.senha == admin.senha)).first()
+        if verify_admin:
+            return verify_admin
         else:
             raise HTTPException(status_code=401, detail="Credenciais inválidas")
     else:

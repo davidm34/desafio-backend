@@ -15,6 +15,8 @@ url = URL.create(
 engine = create_engine(url)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+
+
 Base = declarative_base()
 
 # Dependency para usar nas rotas
