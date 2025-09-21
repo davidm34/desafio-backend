@@ -43,16 +43,22 @@ def delete_empresa(db: Session, empresa_id: int):
     db.commit()
     return {"detail": "Empresa excluída com sucesso"}
 
-def create_admin(db: Session, admin: schemas.AdminCreate):
-    existing = db.query(models.Admin).filter(models.Admin.nome == admin.nome).first()
+def create_or_login_admin(db: Session, admin: schemas.AdminCreate):
+    existing = db.query(models.Admin)
     if existing:
-        raise HTTPException(status_code=400, detail="Administrador já existe")
-
-    db_admin = models.Admin(
-        nome=admin.nome,
-        senha=admin.senha
-    )
-    db.add(db_admin)
-    db.commit()
-    db.refresh(db_admin)
-    return db_admin
+        # logar
+        if existing.models.Admin.nome == admin.nome and existing.models.Admin.senha == admin.senha:
+            return existing
+        else:
+            raise HTTPException(status_code=401, detail="Credenciais inválidas")
+    else:
+        # criar o admin
+        db_admin = models.Admin(
+            nome=admin.nome,
+            senha=admin.senha
+        )
+        db.add(db_admin)
+        db.commit()
+        db.refresh(db_admin)
+        return db_admin
+       
