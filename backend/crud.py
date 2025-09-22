@@ -2,6 +2,8 @@ from sqlalchemy.orm import Session
 from sqlalchemy import and_
 import models as models, schemas as schemas
 from fastapi import HTTPException, status
+from fastapi.security import OAuth2PasswordRequestForm
+from passlib.context import CryptContext
 
 def get_empresas(db: Session, cidade: str | None = None, ramo: str | None = None, search: str | None = None):
     query = db.query(models.Empresa)
@@ -44,19 +46,36 @@ def delete_empresa(db: Session, empresa_id: int):
     db.commit()
     return {"detail": "Empresa excluída com sucesso"}
 
-def create_or_login_admin(db: Session, admin: schemas.AdminCreate):
-    existing = db.query(models.Admin).all()    
-    if existing:
-        verify_admin = db.query(models.Admin).filter(and_(models.Admin.nome == admin.nome, models.Admin.senha == admin.senha)).first()
-        if verify_admin:
-            return verify_admin
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+def verify_password(plain_password, hashed_password):
+    return pwd_context.verify(plain_password, hashed_password)
+
+def get_password_hash(password):
+    return pwd_context.hash(password)
+
+def get_admin_by_name(db: Session, nome: str):
+    return db.query(models.Admin).filter(models.Admin.nome == nome).first()
+
+def create_or_login_admin(db: Session, admin: OAuth2PasswordRequestForm):
+    existing_admin = get_admin_by_name(db, nome=admin.username)
+    
+    # Se o admin existe, verifica a senha
+    if existing_admin:
+        if verify_password(admin.password, existing_admin.senha):
+            return existing_admin # Autenticação bem-sucedida
         else:
-            raise HTTPException(status_code=401, detail="Credenciais inválidas")
+            # Lança uma exceção se a senha for incorreta
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Credenciais inválidas"
+            )
     else:
-        # criar o admin
+        # Se o admin não existe, cria um novo
+        hashed_password = get_password_hash(admin.password)
         db_admin = models.Admin(
-            nome=admin.nome,
-            senha=admin.senha
+            nome=admin.username,
+            senha=hashed_password # Armazena a senha criptografada
         )
         db.add(db_admin)
         db.commit()
