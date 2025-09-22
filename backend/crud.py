@@ -1,9 +1,10 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import and_
 import models as models, schemas as schemas
-from fastapi import HTTPException, status
+from fastapi import HTTPException, status, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 from passlib.context import CryptContext
+from typing import Annotated
 
 def get_empresas(db: Session, cidade: str | None = None, ramo: str | None = None, search: str | None = None):
     query = db.query(models.Empresa)
@@ -21,8 +22,8 @@ def get_empresa(db: Session, empresa_id: int):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Empresa não encontrada")
     return empresa
 
-def create_empresa(db: Session, empresa: schemas.EmpresaCreate):
-    db_empresa = models.Empresa(**empresa.dict())
+def create_empresa(db: Session, empresa: schemas.EmpresaOut):
+    db_empresa = models.Empresa(**empresa.model_dump())
     db.add(db_empresa)
     try:
         db.commit()
@@ -60,12 +61,11 @@ def get_admin_by_name(db: Session, nome: str):
 def create_or_login_admin(db: Session, admin: OAuth2PasswordRequestForm):
     existing_admin = get_admin_by_name(db, nome=admin.username)
     
-    # Se o admin existe, verifica a senha
+
     if existing_admin:
         if verify_password(admin.password, existing_admin.senha):
-            return existing_admin # Autenticação bem-sucedida
+            return existing_admin 
         else:
-            # Lança uma exceção se a senha for incorreta
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Credenciais inválidas"
@@ -75,7 +75,7 @@ def create_or_login_admin(db: Session, admin: OAuth2PasswordRequestForm):
         hashed_password = get_password_hash(admin.password)
         db_admin = models.Admin(
             nome=admin.username,
-            senha=hashed_password # Armazena a senha criptografada
+            senha=hashed_password 
         )
         db.add(db_admin)
         db.commit()

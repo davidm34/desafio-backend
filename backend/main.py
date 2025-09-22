@@ -1,16 +1,13 @@
 from datetime import timedelta, datetime, timezone
 from typing import Annotated
-
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
-
 import models as models, database as database, crud as crud
 import empresas as empresas
-import schemas 
 
 models.Base.metadata.create_all(bind=database.engine)
 

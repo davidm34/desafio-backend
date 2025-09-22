@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 from datetime import datetime
 
 class EmpresaBase(BaseModel):
@@ -7,7 +7,7 @@ class EmpresaBase(BaseModel):
     cidade: str
     ramo_atuacao: str
     telefone: str 
-    email_contato: EmailStr
+    email_contato: str
 
 class EmpresaCreate(EmpresaBase):
     pass
@@ -17,7 +17,7 @@ class EmpresaUpdate(BaseModel):
     cidade: str | None = None
     ramo_atuacao: str | None = None
     telefone: str | None = None
-    email_contato: EmailStr | None = None
+    email_contato: str | None = None
 
 class EmpresaOut(EmpresaBase):
     id: int
