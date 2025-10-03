@@ -59,26 +59,34 @@ def get_admin_by_name(db: Session, nome: str):
     return db.query(models.Admin).filter(models.Admin.nome == nome).first()
 
 def create_or_login_admin(db: Session, admin: OAuth2PasswordRequestForm):
-    existing_admin = get_admin_by_name(db, nome=admin.username)
-    
+    first_user = db.query(models.Admin).first()
 
-    if existing_admin:
-        if verify_password(admin.password, existing_admin.senha):
-            return existing_admin 
+    if first_user:
+
+        existing_admin = get_admin_by_name(db, nome=admin.username)
+        
+        if existing_admin:
+            if verify_password(admin.password, existing_admin.senha):
+                return existing_admin 
+            else:
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="Credenciais inválidas"
+                )
         else:
-            raise HTTPException(
+             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Credenciais inválidas"
-            )
+            )   
     else:
-        # Se o admin não existe, cria um novo
-        hashed_password = get_password_hash(admin.password)
-        db_admin = models.Admin(
-            nome=admin.username,
-            senha=hashed_password 
-        )
-        db.add(db_admin)
-        db.commit()
-        db.refresh(db_admin)
-        return db_admin
-       
+         # Se o admin não existe, cria um novo
+            hashed_password = get_password_hash(admin.password)
+            db_admin = models.Admin(
+                nome=admin.username,
+                senha=hashed_password 
+            )
+            db.add(db_admin)
+            db.commit()
+            db.refresh(db_admin)
+            return db_admin
+          
