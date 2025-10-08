@@ -1,7 +1,3 @@
-# Desafio Backend
-
-Este projeto consiste em uma aplicação web full-stack para gerenciamento de empresas, com um backend desenvolvido em FastAPI e um frontend em React.
-
 ## Como Rodar o Projeto
 
 ### Pré-requisitos
