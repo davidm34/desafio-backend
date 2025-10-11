@@ -29,7 +29,7 @@
     ```bash
     uvicorn main:app --reload
     ```
-    O servidor estará disponível em `http://127.0.0.1:8000`.
+    O servidor estará disponível em `http://127.0.0.1:8000`. Para testar as requisições da API, acesse o endpoint `/docs`.
 
 ### Frontend
 
@@ -71,3 +71,11 @@
 * `src/company.jsx`: Componente React para a tela de gerenciamento de empresas, que permite adicionar, listar e remover empresas.
 * `src/index.css`: Contém os estilos globais da aplicação.
 * `package.json`: Lista as dependências e scripts do Node.js para o frontend.
+
+## Tutorial de Login
+
+Você será redirecionado para a página de administrador e, na primeira vez, criará um administrador único e permanente. Depois disso, você será redirecionado para a tela de cadastrar empresa.
+
+![Demonstração da tela de login do administrador](./images/tela_admin.png)
+
+![Demonstração da tela de cadastro de empresas](./assets/tela_empresas.png)
