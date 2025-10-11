@@ -76,6 +76,8 @@
 
 Você será redirecionado para a página de administrador e, na primeira vez, criará um administrador único e permanente. Depois disso, você será redirecionado para a tela de cadastrar empresa.
 
+### Tela de Adminstrador
 ![Demonstração da tela de login do administrador](./images/tela_admin.png)
 
+### Tela de Cadastro de Empresas
 ![Demonstração da tela de cadastro de empresas](./images/tela_empresas.png)
