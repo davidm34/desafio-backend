@@ -1,6 +1,5 @@
 fastapi[standard]
-pydantic 
 sqlalchemy
 psycopg2-binary
-passlib
+passlib[bcrypt]
 python-jose[cryptography]
