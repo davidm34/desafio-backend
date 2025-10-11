@@ -25,6 +25,10 @@
 
 4.  **Inicie o servidor backend:**
     * Navegue até o diretório `backend`.
+    ```bash
+    cd backend
+    ```
+    
     * Execute o seguinte comando:
     ```bash
     uvicorn main:app --reload
